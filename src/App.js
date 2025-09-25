@@ -11,6 +11,12 @@ import './App.css';
 
 // const PROXY_URL = 'https://cors-anywhere.herokuapp.com/';
 
+// Logs to depict environment info
+console.log('=== ENVIRONMENT INFO ===');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+console.log('=======================');
+
 const initialState = {
   input: '',
   imageUrl: undefined,
@@ -30,6 +36,10 @@ class App extends Component {
   constructor() {
     super();
     this.state = initialState;
+    this.API_BASE_URL = process.env.REACT_APP_API_URL;
+
+    // Debug - check if URL is loaded correctly
+    console.log('API Base URL:', this.API_BASE_URL);
   }
 
   loadUser = (data) => {
@@ -67,7 +77,7 @@ class App extends Component {
   onButtonSubmit = (event) => {
     this.setState({imageUrl: this.state.input});
     
-    fetch('https://face-recognition-brain-api-ffr0.onrender.com/imageurl', {
+    fetch(`${this.API_BASE_URL}/imageurl`, {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -77,7 +87,7 @@ class App extends Component {
     .then(response => response.json())
     .then(response => {
         if (typeof response !== 'string') { // Error returns from Clarifai API call as a string
-          fetch('https://face-recognition-brain-api-ffr0.onrender.com/image', {
+          fetch(`${this.API_BASE_URL}/image`, {
             method: 'put',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
@@ -150,8 +160,8 @@ class App extends Component {
             </div>
           : (
              route === 'signin'
-             ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
-             : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+             ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} API_BASE_URL={this.API_BASE_URL}/>
+             : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} API_BASE_URL={this.API_BASE_URL}/>
             )
       }
       </div>
