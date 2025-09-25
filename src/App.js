@@ -20,7 +20,7 @@ console.log('=======================');
 const initialState = {
   input: '',
   imageUrl: undefined,
-  box: {},
+  boxes: [],
   route: 'signin',
   isSignedIn: false,
   user: {
@@ -66,8 +66,9 @@ class App extends Component {
   }
 
   displayFaceBox = (box) => {
-    console.log(box);
-    this.setState({box: box});
+    this.setState(prevState => ({
+      boxes: [...prevState.boxes, box] 
+    }));
   }
 
   onInputChange = (event) => {
@@ -75,7 +76,7 @@ class App extends Component {
   }
 
   onButtonSubmit = (event) => {
-    this.setState({imageUrl: this.state.input});
+    this.setState({boxes: [], imageUrl: this.state.input});
     
     fetch(`${this.API_BASE_URL}/imageurl`, {
       method: 'post',
@@ -156,7 +157,7 @@ class App extends Component {
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
               />
-              <FaceRecognition box={this.state.box} imageUrl={imageUrl} />
+              <FaceRecognition boxes={this.state.boxes} imageUrl={imageUrl} />
             </div>
           : (
              route === 'signin'
