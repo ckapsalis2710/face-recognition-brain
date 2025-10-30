@@ -1,6 +1,8 @@
 import React from 'react';
 
 class Signin extends React.Component {
+	API_BASE_URL = process.env.REACT_APP_API_URL;
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -21,8 +23,12 @@ class Signin extends React.Component {
 		}); 
 	}
 
+	saveAuthedicationToken = (token) => {
+		window.sessionStorage.setItem('token', token);
+	}
+
 	onSubmitSignIn = () => {
-		fetch(`${this.props.API_BASE_URL}/signin`, {
+		fetch(`${this.API_BASE_URL}/signin`, {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
@@ -31,10 +37,24 @@ class Signin extends React.Component {
 			})
 		})
 		.then(response => response.json())
-		.then(user => {
-			if (user.id) { // does the user exist? Did we receive a user with a property of id?
-				this.props.loadUser(user);
-				this.props.onRouteChange('home');
+		.then(data => {
+			if (data.userId && data.success === "true") { // does the user exist? Did we receive a user with a property of id?
+				this.saveAuthedicationToken(data.token);
+				fetch(`${this.API_BASE_URL}/profile/${data.userId}`, {
+		            method: 'GET',
+		            headers: {
+		              'Content-Type': 'application/json',
+		              'Authorization': data.token
+		            }
+	          	})	
+	          	.then(resp => resp.json())
+	          	.then(user => {
+		            if (user && user.email) {
+	              		this.props.loadUser(user);
+						this.props.onRouteChange('home');
+		            }
+	          	})
+	          	.catch(console.log);
 			}
 		})
 	}
@@ -43,7 +63,7 @@ class Signin extends React.Component {
 		const { onRouteChange } = this.props;
 		
 		return(
-			<article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+			<article className="br3 ba b--black-10 mv4 w-50-m w-25-l mw6 shadow-5 center width25">
 		        <main className="pa4 black-80">
 		          <div className="measure">
 		            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -51,7 +71,7 @@ class Signin extends React.Component {
 		              <div className="mt3">
 		                <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
 		                <input
-		                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+		                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 hover-black"
 		                  type="email"
 		                  name="email-address"
 		                  id="email-address"
@@ -61,7 +81,7 @@ class Signin extends React.Component {
 		              <div className="mv3">
 		                <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
 		                <input
-		                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+		                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 hover-black"
 		                  type="password"
 		                  name="password"
 		                  id="password"

@@ -1,6 +1,8 @@
 import React from 'react';
 
 class Register extends React.Component {
+	API_BASE_URL = process.env.REACT_APP_API_URL;
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -28,8 +30,12 @@ class Register extends React.Component {
 		}); 
 	}
 
-	onSubmitSignIn = () => {
-		fetch(`${this.props.API_BASE_URL}/register`, {
+	saveAuthedicationToken = (token) => {
+		window.sessionStorage.setItem('token', token);
+	}
+
+	onSubmitRegister = () => {
+		fetch(`${this.API_BASE_URL}/register`, {
 			method: 'post',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
@@ -39,9 +45,10 @@ class Register extends React.Component {
 			})
 		})
 		.then(response => response.json())
-		.then(user => {
-			if (user.id) {
-				this.props.loadUser(user);
+		.then(data => {
+			if (data.user && data.token) {
+				this.saveAuthedicationToken(data.token);
+				this.props.loadUser(data.user);
 				this.props.onRouteChange('home');
 			}
 		})
@@ -49,7 +56,7 @@ class Register extends React.Component {
 
 	render() {
 		return(
-			<article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+			<article className="br3 ba b--black-10 mv4 w-50-m w-25-l mw6 shadow-5 center width25">
 		        <main className="pa4 black-80">
 		          <div className="measure">
 		            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -57,7 +64,7 @@ class Register extends React.Component {
 		              <div className="mt3">
 		                <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
 		                <input
-		                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+		                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 hover-black"
 		                  type="text"
 		                  name="name"
 		                  id="name"
@@ -67,7 +74,7 @@ class Register extends React.Component {
 		              <div className="mt3">
 		                <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
 		                <input
-		                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+		                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 hover-black"
 		                  type="email"
 		                  name="email-address"
 		                  id="email-address"
@@ -77,7 +84,7 @@ class Register extends React.Component {
 		              <div className="mv3">
 		                <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
 		                <input
-		                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+		                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100 hover-black"
 		                  type="password"
 		                  name="password"
 		                  id="password"
@@ -87,7 +94,7 @@ class Register extends React.Component {
 		            </fieldset>
 		            <div className="">
 		              <input
-		                onClick={this.onSubmitSignIn}
+		                onClick={this.onSubmitRegister}
 		                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
 		                type="submit"
 		                value="Register"
