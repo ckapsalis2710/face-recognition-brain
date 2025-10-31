@@ -66,7 +66,7 @@ class ProfileIcon extends React.Component {
 				      src={avatarImage}
 				      className="br-100 ba h3 w3 dib" alt="avatar" />
 				  </DropdownToggle>
-				  <DropdownMenu className='b--transparent shadow-5' style={{marginLeft: '-6rem', marginTop: '3rem', backgroundColor: 'rgba(255, 255, 255, 0.5)'}} >
+				  <DropdownMenu className='b--transparent shadow-5' style={{marginLeft: '-6rem', backgroundColor: 'rgba(255, 255, 255, 0.5)'}} >
 				    <DropdownItem onClick={this.props.toggleModal}>
 				      View Profile
 				    </DropdownItem>

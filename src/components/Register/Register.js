@@ -46,7 +46,7 @@ class Register extends React.Component {
 		})
 		.then(response => response.json())
 		.then(data => {
-			if (data.user && data.token) {
+			if (data.success) {
 				this.saveAuthedicationToken(data.token);
 				this.props.loadUser(data.user);
 				this.props.onRouteChange('home');

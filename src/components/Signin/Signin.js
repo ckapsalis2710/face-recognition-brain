@@ -38,7 +38,7 @@ class Signin extends React.Component {
 		})
 		.then(response => response.json())
 		.then(data => {
-			if (data.userId && data.success === "true") { // does the user exist? Did we receive a user with a property of id?
+			if (data.userId && data.success) { // does the user exist? Did we receive a user with a property of id?
 				this.saveAuthedicationToken(data.token);
 				fetch(`${this.API_BASE_URL}/profile/${data.userId}`, {
 		            method: 'GET',
