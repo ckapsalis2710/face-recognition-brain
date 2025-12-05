@@ -1,5 +1,6 @@
 import React from "react";
 import './Profile.css';
+import avatarImage from './Avery_botttsNeutral.png';
 
 class Profile extends React.Component {
 	API_BASE_URL = process.env.REACT_APP_API_URL;
@@ -55,7 +56,7 @@ class Profile extends React.Component {
 		        <article className='br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center bg-white'>
 		          	<main className='pa4 black-80 w-80'>
 			            <img
-			              src='https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Avery'
+			              src={avatarImage} // https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Avery
 			              className='h3 w3 dib' alt='avatar'
 			            />
 			            <h1>{name}</h1>

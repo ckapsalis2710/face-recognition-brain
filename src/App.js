@@ -142,7 +142,12 @@ class App extends Component {
           })
           .then(response => response.json())
           .then(entries => {
-            this.setState(Object.assign(this.state.user, { entries: entries}))
+            this.setState(prevState => ({
+              user: {
+                ...prevState.user,
+                  entries: entries
+                }
+            }));
           })
           .catch(console.log);
         }
@@ -193,7 +198,7 @@ class App extends Component {
   }
 
   render() {
-    const { isSignedIn, imageUrl, route, isProfileOpen, user } = this.state;
+    const { isSignedIn, imageUrl, route, isProfileOpen, user, boxes } = this.state;
     return (
       <div className="App">
         <ParticlesBg type="cobweb" bg={true} />
@@ -211,14 +216,14 @@ class App extends Component {
           ? <div>
               <Logo />
               <Rank
-                name={this.state.user.name}
-                entries={this.state.user.entries}
+                name={user.name}
+                entries={user.entries}
               />
               <ImageLinkForm
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
               />
-              <FaceRecognition boxes={this.state.boxes} imageUrl={imageUrl} />
+              <FaceRecognition boxes={boxes} imageUrl={imageUrl} />
             </div>
           : (
              route === 'signin'
